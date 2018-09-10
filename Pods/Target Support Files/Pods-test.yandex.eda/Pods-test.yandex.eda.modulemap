@@ -1,0 +1,6 @@
+framework module Pods_test_yandex_eda {
+  umbrella header "Pods-test.yandex.eda-umbrella.h"
+
+  export *
+  module * { export * }
+}
