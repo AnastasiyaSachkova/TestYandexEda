@@ -11,7 +11,7 @@ import Kingfisher
 import SDWebImage
 import Nuke
 
-private struct CachebleKeyProperties{
+private struct CachebleKeyProperties {
     static var cacheTypeKey = "CacheTypeKeyProperty"
 }
 
@@ -20,11 +20,11 @@ protocol CachebleProtocols: class {
     func setCache(for imageView: UIImageView, with url: URL, completion: VoidCompletion?)
 }
 
-extension CachebleProtocols{
+extension CachebleProtocols {
     
     /// Caching typy - .kingfisher, .nuke, .sdwebimage, .undefind (not cached)
     var cacheType: CacheType {
-        get{
+        get {
             guard let type = objc_getAssociatedObject(self, &CachebleKeyProperties.cacheTypeKey) as? CacheType else {
                 var returnType: CacheType = .undefind
                 let userDefaults = UserDefaults.standard
@@ -36,7 +36,7 @@ extension CachebleProtocols{
             }
             return type
         }
-        set{
+        set {
             let userDefaults = UserDefaults.standard
             userDefaults.setValue(newValue.rawValue, forKeyPath: "cache_type")
             objc_setAssociatedObject(self, &CachebleKeyProperties.cacheTypeKey, newValue, .OBJC_ASSOCIATION_RETAIN)
@@ -59,10 +59,10 @@ extension CachebleProtocols{
     ///   - url: image url
     ///   - continousType: cache type for next caches
     func setCache(for imageView: UIImageView, with url: URL, continousType: CacheType?, completion: VoidCompletion? = nil) {
-        if let continousType = continousType{
+        if let continousType = continousType {
             cacheType = continousType
         }
-        switch cacheType{
+        switch cacheType {
         case .undefind:
             FileDownloader.get(for: url) { data in
                 if let data = data, let image = UIImage(data: data){
@@ -83,7 +83,7 @@ extension CachebleProtocols{
 }
 
 //wrapper singltone
-class Cacher: CachebleProtocols{
+class Cacher: CachebleProtocols {
     static let shared = Cacher()
     private init(){}
 }
@@ -104,8 +104,8 @@ extension UIImageView{
     }
 }
 
-typealias VoidCompletion = () -> Void
-typealias DataCompletion = (Data?) -> Void
+
+
 class FileDownloader{
     class func get(for url: URL, completion: @escaping DataCompletion){
         URLSession.shared.dataTask(with: url, completionHandler: { data, response, error in

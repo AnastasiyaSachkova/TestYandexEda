@@ -17,6 +17,7 @@ class PlacesTVC: UITableViewCell {
     private var data: PlaceModel?
     private var width = "75"
     private var height = "100"
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         descr.delegate = self
@@ -24,26 +25,31 @@ class PlacesTVC: UITableViewCell {
         activityIndicator.hidesWhenStopped = true
     }
     
-    func setData(with data: FoundPlaceModel){
+    func setData(with data: [FoundPlaceModel], index: Int){
         activityIndicator.startAnimating()
-        name.text = data.place?.name
-        descr.text = data.place?.description
+        name.text = data[index].place?.name
+        descr.text = data[index].place?.description
         //setDescription(with: data.place?.description)
+        setupImage(uri: data[index].place?.picture?.uri)
         
-        if let uri = data.place?.picture?.uri {
-            let fullString = NetworkApi.shared.imgURL + uri
-            let url = fullString.replacingOccurrences(of: "{w}", with: height).replacingOccurrences(of: "{h}", with: width )
-            if let fullURL = URL(string: url){
-                img.setCache(for: fullURL){[weak self] in
-                    DispatchQueue.main.async {
-                        self?.activityIndicator.stopAnimating()
-                    }
-                    
-                }
-                
+    }
+    
+    private func setupImage(uri: String?) {
+        guard let uri = uri else { return }
+        let fullString = NetworkApi.shared.imgURL + uri
+        let url = fullString.replacingOccurrences(of: "{w}", with: height).replacingOccurrences(of: "{h}", with: width )
+        guard let fullURL = URL(string: url) else { return }
+        img.setCache(for: fullURL){ [weak self] in
+            DispatchQueue.main.async {
+                self?.activityIndicator.stopAnimating()
             }
         }
     }
+    
+    
+    
+    
+    
 // преобразование html в string занимает определенное время, для одной строки нормально работает, для таблицы не очень
     private func setDescription(with htmlStr: String?){
         guard let descriptionStr = htmlStr else { return }

@@ -7,14 +7,16 @@
 //
 
 import Foundation
+
 let serverURL = "https://eda.yandex/api/v2/catalog?latitude=55.762885&longitude=37.597360"
+let imgURL = "https://eda.yandex"
 
 class NetworkApi {
+    
     static let shared = NetworkApi()
-    let imgURL = "https://eda.yandex"
+
     class func urlRequest() -> URLRequest {
-        var urlString : String
-        urlString = (String (format:"%@", serverURL))
+        let urlString = String(format:"%@", serverURL)
         let requestURL = URL(string:urlString)!
         var request = URLRequest(url: requestURL)
         request.httpMethod = "GET"
@@ -33,6 +35,6 @@ class NetworkApi {
             if let data = data, let json = try? JSONSerialization.jsonObject(with: data, options: []), let dict = json as? [String: Any] {
                 completion(dict)
             }
-            }.resume()
+        }.resume()
     }
 }
